@@ -12,11 +12,13 @@ uploaded_files = st.file_uploader("Upload PDF(s)", type="pdf", accept_multiple_f
 # Question Input
 questions = st.text_area("Enter questions (one per line)").split('\n')  # Split by line breaks
 
-# Optional Configuration Inputs
-st.sidebar.header("Optional Configuration")
-model_name = st.sidebar.text_input("Enter HuggingFace model name", value=Config.HUGGINGFACE_MODEL)
-slack_token = st.sidebar.text_input("Enter Slack API Token", value=Config.SLACK_API_TOKEN, type="password")
+# Mandatory Slack API Token in Sidebar
+st.sidebar.header("Configuration")
+slack_token = st.sidebar.text_input("Enter Slack API Token (mandatory)", value=Config.SLACK_API_TOKEN, type="password")
 slack_channel = st.sidebar.text_input("Enter Slack Channel", value=Config.SLACK_CHANNEL)
+
+# Optional Model Name
+model_name = st.sidebar.text_input("Enter HuggingFace model name", value=Config.HUGGINGFACE_MODEL)
 
 # Status display function
 status_placeholder = st.empty()
@@ -27,7 +29,10 @@ def update_status(message):
 
 # Submit button
 if st.button("Submit"):
-    if uploaded_files and questions:
+    # Check if Slack API Token has been changed from the dummy value
+    if slack_token == Config.SLACK_API_TOKEN:
+        st.sidebar.error("Slack API Token is mandatory and cannot be the default dummy value.")
+    elif uploaded_files and questions:
         # Clean up empty questions in case of accidental empty lines
         questions = [q.strip() for q in questions if q.strip()]  # Remove empty lines or spaces
 
@@ -42,4 +47,3 @@ if st.button("Submit"):
         status_placeholder.empty()  # Clear the status message
     else:
         st.error("Please upload PDFs and enter questions.")
-
