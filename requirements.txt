@@ -1,0 +1,4 @@
+transformers
+pdfplumber
+#slack-sdk
+torch
