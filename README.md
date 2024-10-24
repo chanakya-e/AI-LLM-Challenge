@@ -18,6 +18,14 @@ This project is about an AI agent that helps you get answers from PDF files. You
 - **Slack Account**: You need a Slack workspace and API keys to connect the AI agent to Slack.
 - **API Keys**: You will need API keys from Slack to enable communication.
 
+## Unzip and Change Directory
+First, unzip the provided project folder and navigate to the newly created project directory. You can do this either through your file manager or using the terminal. To unzip the file and change directory using the terminal, use:
+
+```bash
+unzip AI-LLM-Challenge-main.zip
+cd AI-LLM-Challenge-main
+```
+
 ## Installing Requirements
 
 To install the necessary Python libraries, execute the following command:
