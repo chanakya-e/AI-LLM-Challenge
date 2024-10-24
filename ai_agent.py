@@ -42,11 +42,10 @@ class AIAgent:
             # Display which question is being processed
             if update_status_func:
                 update_status_func(f"Processing question {i + 1}/{len(questions)}: '{question}'...")
-
-            responses = self.query_handler.query_model(all_text_chunks, question)
-            answer = next((resp for resp in responses if resp != "Data Not Available"), "Data Not Available")
+                
+            answer = self.query_handler.query_model(all_text_chunks, question)[0]  # Taking the top answer
             all_responses.append({"question": question, "answer": answer})
 
         # Format output as structured JSON
-        output_json = {"questions": all_responses}
+        output_json = {"questions and answers": all_responses}
         self.slack_notifier.post_message(self.slack_channel, json.dumps(output_json, indent=4))
