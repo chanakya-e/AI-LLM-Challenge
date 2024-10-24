@@ -11,10 +11,19 @@ class AIAgent:
         # Use the provided model, token, and channel if given, otherwise use default from config
         model_name = model_name or Config.HUGGINGFACE_MODEL
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)  # Dynamically load tokenizer based on the model
+
+        # Get max_tokens from the tokenizer to ensure it matches the model's capacity
+        max_tokens = self.tokenizer.model_max_length
+
         self.query_handler = QueryHandler(model_name)
         self.slack_notifier = SlackNotifier(slack_token or Config.SLACK_API_TOKEN)
         self.slack_channel = slack_channel or Config.SLACK_CHANNEL
-        self.document_handlers = [DocumentHandler(pdf_file, self.tokenizer) for pdf_file in pdf_files]
+
+        # Pass max_tokens to DocumentHandler
+        self.document_handlers = [
+            DocumentHandler(pdf_file, self.tokenizer, max_tokens=max_tokens)
+            for pdf_file in pdf_files
+        ]
 
     def process_and_notify(self, questions: List[str], update_status_func=None):
         all_text_chunks = []
@@ -41,4 +50,3 @@ class AIAgent:
         # Format output as structured JSON
         output_json = {"questions": all_responses}
         self.slack_notifier.post_message(self.slack_channel, json.dumps(output_json, indent=4))
-
