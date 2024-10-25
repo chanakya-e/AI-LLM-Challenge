@@ -1,5 +1,4 @@
 import streamlit as st
-from io import BytesIO  # For handling file uploads
 from ai_agent import AIAgent  # Import the AI agent class
 from config.config import Config  # Config file for defaults
 
